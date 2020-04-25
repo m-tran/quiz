@@ -1,7 +1,6 @@
 $(document).ready(function () {
-    // var question = $("#question");
+    
     var $quizContainer = $("#quizContainer");
-    var options = $("#choices");
     var submitBtn = $("#submitBtn");
 
     // create an array of question objects
@@ -27,43 +26,53 @@ $(document).ready(function () {
         }
     ];
 
-    // var $quiz = $("<div>", {id="questions-tree"});
-
     var answers = [];
-    var currentQuestion = [];
-    var currentChoices = [];
 
     var questionNumber = 1;
 
-    for(letter in questions[0].choices){
-        currentChoices.push(
-            `<label>
-                <input type="radio" name="question${questionNumber}" value="${letter}">
-                ${letter} :
-                ${questions[0].choices[letter]}
-            </label>`
+    function createQuestion(questionIndex) {
+        var currentQuestion = [];
+        var currentChoices = [];
+
+        for (letter in questionIndex.choices) {
+            currentChoices.push(
+                `<label>
+                    <input type="radio" name="${questionNumber}" value="${letter}">
+                    ${letter} :
+                    ${questionIndex.choices[letter]}
+                </label>`
+            );
+        }
+        currentQuestion.push(
+            `<div class="row col-sm-8 question mb-2">
+                ${questionIndex.question}
+            </div>
+            <form class="row col-sm-8 choices" style="display: inline;"> 
+                ${currentChoices.join("<br>")}
+            </form>`
         );
+        $quizContainer.html(currentQuestion.join("<br>"));
     }
 
-    currentQuestion.push(
-        `<div class="row col-sm-8 question mb-2">
-            ${questions[0].question}
-        </div>
-        <div class="row col-sm-8 choices" style="display: inline;"> 
-            ${currentChoices.join("<br>")}
-        </div>`
-    );
+    $('.choices input').on('change', function() {
+        console.log($(`input[name="${questionNumber}"]:checked`, '.choices').val());
+    });
 
-    // currentChoices.push(
-    //     `<div class="choices"> ${currentChoices.join('')}</div>`
-    // )
+    var i=0;
 
-    console.log(currentChoices);
+    createQuestion(questions[i]);
 
-    $quizContainer.html(currentQuestion.join("<br>"));
-
-
-    // $quizContainer.append($quiz);
-
+    submitBtn.on("click", function() {
+        console.log(i);
+        answers.push($(`input[name="${questionNumber}"]:checked`, '.choices').val());
+        localStorage.setItem("submit", answers);
+        if (i>(questions.length - 2)) {
+            $quizContainer.html(""); 
+            $(".button").html(""); 
+        } else {
+            createQuestion(questions[i]);
+            i++;
+        }
+    });
 
 });
