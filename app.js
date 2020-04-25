@@ -1,6 +1,7 @@
 $(document).ready(function () {
     
     var $quizContainer = $("#quizContainer");
+    var nextBtn = $("#nextBtn");
     var submitBtn = $("#submitBtn");
 
     // create an array of question objects
@@ -25,6 +26,31 @@ $(document).ready(function () {
             }
         }
     ];
+
+    if (localStorage.getItem('scoreboard') === null) {
+        var highScore = [];
+    } else {
+        var highScore = JSON.parse(localStorage.getItem('scoreboard'));
+    }
+    
+
+    var leaderBoard = {
+        addScore: function(name, score) {
+            highScore.push([name, score]);
+    
+            highScore.sort(function(a, b) {
+                return a[1] > b[1];
+            });
+    
+            if (highScore.length > 5) {
+                highScore = highScore.splice(0, 5);
+            }
+        },
+    
+        saveScores: function() {
+            localStorage.setItem('scoreboard', JSON.stringify(highScore));
+        },
+    }
 
     var characters = {
         'a': 2,
@@ -82,26 +108,38 @@ $(document).ready(function () {
     var scores = [];
     var highScore;
 
-    submitBtn.on("click", function() {
-        console.log(i);
+    nextBtn.on("click", function() {
+        // console.log(i);
         answers.push($(`input[name="${questionNumber}"]:checked`, '.choices').val());
         localStorage.setItem("submit", answers);
         if (i>(questions.length - 2)) {
             $quizContainer.html(""); 
             $(".button").html(""); 
             numbers = localStorage.getItem("submit").split(',');
-            console.log(typeof numbers);
+            // console.log(typeof numbers);
             for (let i=0; i<numbers.length; i++) {
                 scores.push(characters[numbers[i]]);
             }
-            localStorage.setItem("high score", sum(scores));
-            highScore = localStorage.getItem("high score");
-            $quizContainer.html(highScore);
-            console.log(sum(scores));
+            $quizContainer.append(
+            `<form>
+                <label for="initials">Initials</label><br>
+                <input type="text" id="initials" name="name">
+                <input id="submitBtn" class="mt-4 button" type="submit" value="Submit">
+            </form>`
+            );
         } else {
             createQuestion(questions[i]);
             i++;
         }
+    });
+
+    $quizContainer.on("click", "input#submitBtn", function(e) {
+        e.preventDefault();
+        console.log($(`input[name="name"]`).val());
+        leaderBoard.addScore($(`input[name="name"]`).val(), sum(scores));
+        leaderBoard.saveScores();
+        $quizContainer.html(""); 
+        $quizContainer.html(highScore); 
     });
 
 });
