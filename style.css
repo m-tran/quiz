@@ -8,3 +8,38 @@
     height: 10px;
     background-color: white;
 }
+
+.choices label {
+    display: inline-block;
+    padding: 10px 20px;
+    font-family: sans-serif, Arial;
+    font-size: 16px;
+    border: 2px solid white;
+    border-radius: 4px;
+}
+
+.choices label:hover {
+    background-color: rgba(223, 223, 223, 0.452);
+}
+
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro');
+
+p {
+    white-space: nowrap;
+    overflow: hidden;    
+    font-family: 'Source Code Pro', monospace;  
+    font-size: 16px;
+    color: rgba(255,255,255,.70);
+}
+
+/* Animation */
+#questionIndex p {
+    animation: animated-text 4s steps(30,end) 1s 1 normal both;
+}
+
+/* text animation */
+
+@keyframes animated-text{
+    from{width: 0;}
+    to{width: 100%;}
+}

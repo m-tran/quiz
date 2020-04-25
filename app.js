@@ -5,6 +5,7 @@ $(document).ready(function () {
     var nextBtn = $("#nextBtn");
     var submitBtn = $("#submitBtn");
     var $title = $("#title");
+    var $jumbotron = $(".jumbotron");
 
     nextBtn.hide();
     // create an array of question objects
@@ -17,16 +18,52 @@ $(document).ready(function () {
                 c: "Quentin Tarantino",
                 d: "Park Chan Wook"
             },
-            answer: "b"
+            answer: "b",
+            url: "url(./assets/parasite-movie-rd.jpg)",
         },
         {
-            question: "What meme is this confused anime guy and his butterfly called?",
+            question: "What meme is this confused anime guy and his butterfly?",
             choices: {
                 a: "Is this a [insert word]?",
                 b: "This is fine.",
                 c: "If you can't handle me at X, you don't deserve me at Y",
                 d: "Things that are expensive"
-            }
+            },
+            answer: "a",
+            url: "url(./assets/butterfly.jpg)",
+        },
+        {
+            question: "What does this dog say?",
+            choices: {
+                a: "[adult swim]",
+                b: "This is fine.",
+                c: "Up Dog",
+                d: "Doge"
+            },
+            answer: "b",
+            url: "url(./assets/dog.jpg)",
+        },
+        {
+            question: "Who is this child?",
+            choices: {
+                a: "a cursed child",
+                b: "a wholesome child",
+                c: "a child",
+                d: "this is a child"
+            },
+            answer: "c",
+            url: "url(./assets/yoda.jpg)",
+        },
+        {
+            question: "Who sings this song?",
+            choices: {
+                a: "Drake",
+                b: "Aubrey Graham",
+                c: "Rake-Day",
+                d: "akedray"
+            },
+            answer: "a",
+            url: "url(./assets/dranke.png)",
         }
     ];
 
@@ -80,15 +117,17 @@ $(document).ready(function () {
             );
         }
         currentQuestion.push(
-            `<div class="row col-sm-12 question mb-2">
-                ${questionIndex.question}
+            `<div id="questionIndex" class="row col-sm-12 question mb-4">
+                <p><b>${questionIndex.question}</b></p>
             </div>
             <form class="row col-sm-12 choices" style="display: inline;"> 
                 ${currentChoices.join("<br>")}
             </form>`
         );
         $quizContainer.html(currentQuestion.join("<br>"));
-        $title.html(`<h1>Question ${i + 1}</h1>`);
+        $title.html("1 / 5");
+
+        $jumbotron.attr("style", `background-blend-mode: overlay; background-image: ${questionIndex.url}; background-size: 100%;`);
     }
 
     function sum(arr) {
@@ -115,7 +154,6 @@ $(document).ready(function () {
 
     initQuiz();
     startBtn.on("click", function () {
-        createQuestion(questions[i]);
         nextBtn.show();
         startBtn.hide();
 
@@ -143,13 +181,13 @@ $(document).ready(function () {
                     <br>
                     <input id="submitBtn" class="button btn btn-outline-light" type="submit" value="Submit">
                     </form>`
-                );  
+                );
             }
             // progress bar
             function move() {
                 width = count / 75 * 100;
-                $('#bar').animate({'width':width + '%'});
-            } 
+                $('#bar').animate({ 'width': width + '%' });
+            }
             move();
         }, 1000);
 
@@ -157,6 +195,8 @@ $(document).ready(function () {
             $("#timer").html('time is up!');
             clearInterval(timer);
         }
+
+        createQuestion(questions[i]);
     });
 
 
@@ -219,5 +259,6 @@ $(document).ready(function () {
         e.preventDefault();
         location.reload();
     })
+
 
 });
