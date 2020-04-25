@@ -1,9 +1,11 @@
 $(document).ready(function () {
 
+    var startBtn = $("#startBtn");
     var $quizContainer = $("#quizContainer");
     var nextBtn = $("#nextBtn");
     var submitBtn = $("#submitBtn");
 
+    nextBtn.hide();
     // create an array of question objects
     var questions = [
         {
@@ -100,13 +102,29 @@ $(document).ready(function () {
 
     var i = 0;
 
-    createQuestion(questions[i]);
+    function initQuiz() {
+        var initState = [];
+        initState.push(`
+        <div class="row col-sm-8 question mb-2">
+            Click the start button to begin.
+        </div>
+        `);
+        $quizContainer.html(initState);
+    }
+
+    initQuiz();
+    startBtn.on("click", function() {
+        createQuestion(questions[i]);
+        nextBtn.show();
+        startBtn.hide();
+    })
+    
 
     var scores = [];
     var highScore;
 
     nextBtn.on("click", function () {
-        // console.log(i);
+        console.log(i);
         answers.push($(`input[name="${questionNumber}"]:checked`, '.choices').val());
         localStorage.setItem("submit", answers);
         if (i > (questions.length - 2)) {
@@ -125,22 +143,22 @@ $(document).ready(function () {
                 <input id="submitBtn" class="mt-4 button" type="submit" value="Submit">
             </form>`
             );
-        } else {
-            createQuestion(questions[i]);
+        } else {   
             i++;
+            createQuestion(questions[i]);
         }
     });
 
-        $quizContainer.on("click", "input#submitBtn", function (e) {
-            e.preventDefault();
-            leaderBoard.addScore($(`input[name="name"]`).val(), sum(scores));
-            leaderBoard.saveScores();
-            $quizContainer.html("");
-            
-            for (i = 0; i < highScore.length; i++) {
-                $('<div class="row col-sm-8" />').html(highScore[i][0] + " - " + highScore[i][1]).appendTo($quizContainer);
-            }
-            
-        });
-
+    $quizContainer.on("click", "input#submitBtn", function (e) {
+        e.preventDefault();
+        leaderBoard.addScore($(`input[name="name"]`).val(), sum(scores));
+        leaderBoard.saveScores();
+        $quizContainer.html("");
+        
+        for (i = 0; i < highScore.length; i++) {
+            $('<div class="row col-sm-8" />').html(highScore[i][0] + " - " + highScore[i][1]).appendTo($quizContainer);
+        }
+        
     });
+
+});
