@@ -12,22 +12,26 @@
 </head>
 
 <body>
-    <div class="container">
-        <div id="progress"></div>
-        <div class="row col-sm-8 mt-4 mb-4">
-            <h1>Hey there!</h1>
-        </div>
-        <div id="timer"></div>
-        <div id="quizContainer" class="row col-sm-8 mb-4">
-            <div class="row col-sm-8">
-
+    <div class="jumbotron d-flex align-items-center min-vh-100 mb-0 bg-dark rounded-0">
+        <div class="container h-100 col-sm-6 offset-3 border border-light p-4 text-light">
+            <div id="progress">
+                <div id="bar"></div>
             </div>
+            <div id="title" class="row col-sm-8 mt-4 mb-4">
+                <h1>Hey there!</h1>
+            </div>
+            <div id="timer"></div>
+            <div id="quizContainer" class="row col-sm-12 mb-4 h-50 v-50">
+                <div class="row col-sm-8">
+
+                </div>
+            </div>
+            <div class="col-sm-2 button p-0">
+                <button id="startBtn" class="btn btn-outline-light" value="Start" type="button">Start</button>
+                <button id="nextBtn" class="btn btn-outline-light" value="Next" type="button">Next</button>
+            </div>
+            <div id="results" class="row col-sm-8"></div>
         </div>
-        <div class="col-sm-1 button">
-            <button id="startBtn" value="Start" type="button">Start</button>
-            <button id="nextBtn" value="Next" type="button">Next</button>
-        </div>
-        <div id="results" class="row col-sm-8"></div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.0.min.js"
         integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>

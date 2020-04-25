@@ -4,6 +4,7 @@ $(document).ready(function () {
     var $quizContainer = $("#quizContainer");
     var nextBtn = $("#nextBtn");
     var submitBtn = $("#submitBtn");
+    var $title = $("#title");
 
     nextBtn.hide();
     // create an array of question objects
@@ -33,7 +34,6 @@ $(document).ready(function () {
         var highScore = [];
     } else {
         var highScore = JSON.parse(localStorage.getItem('scoreboard'));
-        console.log(highScore);
     }
 
 
@@ -80,14 +80,15 @@ $(document).ready(function () {
             );
         }
         currentQuestion.push(
-            `<div class="row col-sm-8 question mb-2">
+            `<div class="row col-sm-12 question mb-2">
                 ${questionIndex.question}
             </div>
-            <form class="row col-sm-8 choices" style="display: inline;"> 
+            <form class="row col-sm-12 choices" style="display: inline;"> 
                 ${currentChoices.join("<br>")}
             </form>`
         );
         $quizContainer.html(currentQuestion.join("<br>"));
+        $title.html(`<h1>Question ${i + 1}</h1>`);
     }
 
     function sum(arr) {
@@ -105,7 +106,7 @@ $(document).ready(function () {
     function initQuiz() {
         var initState = [];
         initState.push(`
-        <div class="row col-sm-8 question mb-2">
+        <div class="row col-sm-12 question mb-2">
             Click the start button to begin.
         </div>
         `);
@@ -133,35 +134,46 @@ $(document).ready(function () {
                 for (let i = 0; i < numbers.length; i++) {
                     scores.push(characters[numbers[i]]);
                 }
+                $title.html("<h1>Done!</h1>");
                 $quizContainer.append(
                     `<form>
                     <p>Your final score is: ${sum(scores)}</p>
                     <label for="initials">Please enter initials</label><br>
-                    <input type="text" id="initials" name="name">
-                    <input id="submitBtn" class="mt-4 button" type="submit" value="Submit">
-                </form>`
-                );
+                    <input type="text" id="initials" class="form-control form-control" name="name">
+                    <br>
+                    <input id="submitBtn" class="button btn btn-outline-light" type="submit" value="Submit">
+                    </form>`
+                );  
             }
+            // progress bar
+            function move() {
+                width = count / 75 * 100;
+                $('#bar').animate({'width':width + '%'});
+            } 
+            move();
         }, 1000);
 
         var stopInterval = function () {
             $("#timer").html('time is up!');
             clearInterval(timer);
         }
-    })
+    });
 
 
 
     var scores = [];
     var penalty = 0;
+    var correct = 0;
     var highScore;
 
     nextBtn.on("click", function () {
-        console.log(questions[i].answer);
+        // console.log(questions[i].answer);
         var answerVal = $(`input[name="${questionNumber}"]:checked`, '.choices').val();
         if (answerVal != questions[i].answer) {
             count = count - 5;
             penalty = penalty + 1;
+        } else if (answerVal = questions[i].answer) {
+            correct = correct + 1;
         }
         answers.push(answerVal);
         localStorage.setItem("submit", answers);
@@ -175,12 +187,14 @@ $(document).ready(function () {
             for (let i = 0; i < numbers.length; i++) {
                 scores.push(characters[numbers[i]]);
             }
+            $title.html("<h1>Done!</h1>");
             $quizContainer.append(
                 `<form>
-                <p>Your final score is: ${sum(scores) - penalty}</p>
+                <p>Your final score is: ${sum(scores) - penalty + correct}</p>
                 <label for="initials">Please enter initials</label><br>
-                <input type="text" id="initials" name="name">
-                <input id="submitBtn" class="mt-4 button" type="submit" value="Submit">
+                <input type="text" id="initials" class="form-control form-control" name="name">
+                <br>
+                <input id="submitBtn" class="button btn btn-outline-light" type="submit" value="Submit">
             </form>`
             );
         } else {
@@ -194,11 +208,16 @@ $(document).ready(function () {
         leaderBoard.addScore($(`input[name="name"]`).val(), sum(scores));
         leaderBoard.saveScores();
         $quizContainer.html("");
-
+        $title.html(`<h1>High Scores</h1></h1>`);
         for (i = 0; i < highScore.length; i++) {
             $('<div class="row col-sm-8" />').html(highScore[i][0] + " - " + highScore[i][1]).appendTo($quizContainer);
         }
-
+        $quizContainer.append(`<input id="restartBtn" class="button btn btn-outline-light" type="restart" value="Restart"></input>`)
     });
+
+    $quizContainer.on("click", "input#restartBtn", function (e) {
+        e.preventDefault();
+        location.reload();
+    })
 
 });
