@@ -80,6 +80,7 @@ $(document).ready(function () {
     createQuestion(questions[i]);
 
     var scores = [];
+    var highScore;
 
     submitBtn.on("click", function() {
         console.log(i);
@@ -93,7 +94,9 @@ $(document).ready(function () {
             for (let i=0; i<numbers.length; i++) {
                 scores.push(characters[numbers[i]]);
             }
-            
+            localStorage.setItem("high score", sum(scores));
+            highScore = localStorage.getItem("high score");
+            $quizContainer.html(highScore);
             console.log(sum(scores));
         } else {
             createQuestion(questions[i]);
