@@ -26,6 +26,13 @@ $(document).ready(function () {
         }
     ];
 
+    var characters = {
+        'a': 2,
+        'b': 3,
+        'c': 4,
+        'd': 7
+    }
+
     var answers = [];
 
     var questionNumber = 1;
@@ -58,9 +65,21 @@ $(document).ready(function () {
         console.log($(`input[name="${questionNumber}"]:checked`, '.choices').val());
     });
 
+    function sum(arr) {
+        var i = 0;
+    
+        for (var index = 0; index < arr.length; index++) {
+            i += arr[index];
+        }
+    
+        return i;
+    }
+
     var i=0;
 
     createQuestion(questions[i]);
+
+    var scores = [];
 
     submitBtn.on("click", function() {
         console.log(i);
@@ -69,6 +88,13 @@ $(document).ready(function () {
         if (i>(questions.length - 2)) {
             $quizContainer.html(""); 
             $(".button").html(""); 
+            numbers = localStorage.getItem("submit").split(',');
+            console.log(typeof numbers);
+            for (let i=0; i<numbers.length; i++) {
+                scores.push(characters[numbers[i]]);
+            }
+            
+            console.log(sum(scores));
         } else {
             createQuestion(questions[i]);
             i++;
